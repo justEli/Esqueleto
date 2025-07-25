@@ -5,6 +5,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 
 /* Eli @ December 28, 2022 (creation) */
 public final class Results
@@ -98,6 +101,36 @@ public final class Results
 
         String string = this.resultSet.getString(column);
         return this.resultSet.wasNull()? null : string;
+    }
+
+    public UUID getUuid (String column)
+    throws SQLException
+    {
+        if (this.resultSet == null)
+            throw new SQLException(NO_DATA);
+
+        // todo improve
+        return this.resultSet.wasNull()? null : UUID.fromString(this.resultSet.getString(column));
+    }
+
+    public Instant getInstant (String column)
+    throws SQLException
+    {
+        if (this.resultSet == null)
+            throw new SQLException(NO_DATA);
+
+        Timestamp timestamp = this.resultSet.getTimestamp(column);
+        return this.resultSet.wasNull()? null : timestamp.toInstant();
+    }
+
+    public Long getTimeMillis (String column)
+    throws SQLException
+    {
+        if (this.resultSet == null)
+            throw new SQLException(NO_DATA);
+
+        Timestamp timestamp = this.resultSet.getTimestamp(column);
+        return this.resultSet.wasNull()? null : timestamp.getTime();
     }
 
     public long getLong (String column)
