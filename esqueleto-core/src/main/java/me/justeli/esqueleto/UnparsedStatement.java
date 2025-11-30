@@ -26,6 +26,9 @@ public final class UnparsedStatement
         return new ExecuteQuery(this.esqueleto, this.statement);
     }
 
+    /**
+     * @param replacements The replacements that will replace the question marks in the query.
+     */
     @CheckReturnValue
     public StatementBind bind (Object... replacements)
     {

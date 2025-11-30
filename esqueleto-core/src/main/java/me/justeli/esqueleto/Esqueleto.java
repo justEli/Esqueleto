@@ -67,16 +67,7 @@ public final class Esqueleto
 
     /**
      * @param statement SQL statement that contains question marks (?) as variables.
-     * @param replacements The replacements that will replace the question marks in the query.
      */
-    @CheckReturnValue
-    @NotNull
-    @Deprecated(forRemoval = true, since = "0.1.2")
-    public StatementBind statement (@Language("SQL") @NotNull String statement, Object... replacements)
-    {
-        return new UnparsedStatement(this, statement).bind(replacements);
-    }
-
     @CheckReturnValue
     @NotNull
     public UnparsedStatement statement (@Language("SQL") @NotNull String statement)

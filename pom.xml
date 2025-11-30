@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.justeli.esqueleto</groupId>
+    <groupId>com.github.JustEli.Esqueleto</groupId>
     <artifactId>Esqueleto</artifactId>
-    <version>0.2.4</version>
+    <version>0.2.5</version>
     <packaging>pom</packaging>
 
     <modules>

@@ -3,15 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>me.justeli.esqueleto</groupId>
+        <groupId>com.github.JustEli.Esqueleto</groupId>
         <artifactId>Esqueleto</artifactId>
-        <version>0.2.4</version>
+        <version>0.2.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>esqueleto-examples</artifactId>
-    <groupId>me.justeli.esqueleto.examples</groupId>
+    <groupId>com.github.JustEli.Esqueleto.examples</groupId>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -20,9 +20,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>me.justeli.esqueleto</groupId>
+            <groupId>com.github.JustEli.Esqueleto</groupId>
             <artifactId>esqueleto-core</artifactId>
-            <version>0.2.4</version>
+            <version>0.2.5</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

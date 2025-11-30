@@ -51,8 +51,7 @@ public final class EsqueletoBuilder
             Esqueleto.LOGGER.error("No dependency was detected for the SQL driver!");
             if (this.config.isDebug())
             {
-                Esqueleto.LOGGER.error("[DEBUG]");
-                exception.printStackTrace();
+                Esqueleto.LOGGER.error("[DEBUG]", exception);
             }
             return null;
         }
