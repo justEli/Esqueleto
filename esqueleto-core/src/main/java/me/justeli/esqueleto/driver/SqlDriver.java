@@ -1,16 +1,17 @@
 package me.justeli.esqueleto.driver;
 
-/* Eli @ December 29, 2022 (creation) */
-public interface SqlDriver
-{
-    String className();
+/**
+ * @author Eli
+ * @since December 29, 2022 (creation)
+ */
+public interface SqlDriver {
+    String getClassName();
 
-    String dependency();
+    String getDependency();
 
-    boolean supportsProperties ();
+    boolean hasPropertiesSupport();
 
-    default String portKey ()
-    {
+    default String getPortKey() {
         return "port";
     }
 }

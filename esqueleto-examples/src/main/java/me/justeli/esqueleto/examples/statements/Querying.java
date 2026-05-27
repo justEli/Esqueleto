@@ -6,7 +6,10 @@ import me.justeli.esqueleto.examples.data.Example;
 import java.util.Optional;
 import java.util.UUID;
 
-/* Eli @ December 28, 2022 (creation) */
+/**
+ * @author Eli
+ * @since December 28, 2022 (creation)
+ */
 public final class Querying
 {
     public record QueryUuidData (UUID data, String message)

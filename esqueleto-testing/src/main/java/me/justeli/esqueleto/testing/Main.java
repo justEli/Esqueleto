@@ -9,7 +9,10 @@ import me.justeli.esqueleto.driver.PostgreSQLDriver;
 import java.util.Optional;
 import java.util.SplittableRandom;
 
-/* Eli @ October 10, 2023 (creation) */
+/**
+ * @author Eli
+ * @since October 10, 2023 (creation)
+ */
 public class Main
 {
     public static void main (String... args)

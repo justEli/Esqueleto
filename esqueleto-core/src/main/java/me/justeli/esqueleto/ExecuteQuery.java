@@ -1,35 +1,30 @@
 package me.justeli.esqueleto;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-/* Eli @ April 13, 2021 (creation) */
-public final class ExecuteQuery
-    extends AbstractStatement
-{
-    ExecuteQuery (Esqueleto esqueleto, String statement, Object... replacements)
-    {
-        super(esqueleto, statement, replacements);
+/**
+ * @author Eli
+ * @since April 13, 2021 (creation)
+ */
+public final class ExecuteQuery extends AbstractStatement {
+    ExecuteQuery(Esqueleto sql, String statement, Object... replacements) {
+        super(sql, statement, replacements);
     }
 
     /**
      * @return The row(s) requested in the query.
      */
     @Override
-    ExecutionData execute ()
-    {
-        try (Connection connection = this.esqueleto.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                 checkForIterable(this.statement, this.replacements)
-             ))
-        {
-            parseReplacements(statement, this.replacements);
-            return new ExecutionData(statement.executeQuery(), 0);
+    ExecutionData execute() {
+        try (
+            var connection = sql.getConnection();
+            var prepared = connection.prepareStatement(checkForIterable(statement, replacements))
+        ) {
+            parseReplacements(prepared, replacements);
+            return new ExecutionData(prepared.executeQuery(), 0);
         }
-        catch (SQLException exception)
-        {
-            Esqueleto.printError(exception, this.statement);
+        catch (SQLException exception) {
+            Esqueleto.printError(exception, statement);
             return new ExecutionData(null, 0);
         }
     }

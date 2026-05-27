@@ -2,7 +2,10 @@ package me.justeli.esqueleto.examples.statements;
 
 import me.justeli.esqueleto.examples.Main;
 
-/* Eli @ December 28, 2022 (creation) */
+/**
+ * @author Eli
+ * @since December 28, 2022 (creation)
+ */
 public final class TableCreations
 {
     public TableCreations (Main main)

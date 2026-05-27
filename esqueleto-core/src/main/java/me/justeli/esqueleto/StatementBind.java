@@ -1,30 +1,29 @@
 package me.justeli.esqueleto;
 
-import me.justeli.esqueleto.annotation.CheckReturnValue;
+import org.jetbrains.annotations.CheckReturnValue;
 
-/* Eli @ July 19, 2024 (creation) */
-public final class StatementBind
-{
-    private final Esqueleto esqueleto;
+/**
+ * @author Eli
+ * @since July 19, 2024 (creation)
+ */
+public final class StatementBind {
+    private final Esqueleto sql;
     private final String statement;
     private final Object[] replacements;
 
-    StatementBind (Esqueleto esqueleto, String statement, Object... replacements)
-    {
-        this.esqueleto = esqueleto;
+    StatementBind(Esqueleto sql, String statement, Object... replacements) {
+        this.sql = sql;
         this.statement = statement;
         this.replacements = replacements;
     }
 
     @CheckReturnValue
-    public ExecuteUpdate update ()
-    {
-        return new ExecuteUpdate(this.esqueleto, this.statement, this.replacements);
+    public ExecuteUpdate update() {
+        return new ExecuteUpdate(sql, statement, replacements);
     }
 
     @CheckReturnValue
-    public ExecuteQuery query ()
-    {
-        return new ExecuteQuery(this.esqueleto, this.statement, this.replacements);
+    public ExecuteQuery query() {
+        return new ExecuteQuery(sql, statement, replacements);
     }
 }

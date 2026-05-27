@@ -1,18 +1,17 @@
 package me.justeli.esqueleto.driver;
 
-/* Eli @ January 02, 2023 (creation) */
-public final class MySQLDriver
-    implements SqlDriver
-{
+/**
+ * @author Eli
+ * @since January 02, 2023 (creation)
+ */
+public final class MySQLDriver implements SqlDriver {
     @Override
-    public String className ()
-    {
+    public String getClassName() {
         return "com.mysql.cj.jdbc.MysqlDataSource";
     }
 
     @Override
-    public String dependency ()
-    {
+    public String getDependency() {
         return """
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
@@ -20,8 +19,7 @@ public final class MySQLDriver
     }
 
     @Override
-    public boolean supportsProperties ()
-    {
+    public boolean hasPropertiesSupport() {
         return false;
     }
 }

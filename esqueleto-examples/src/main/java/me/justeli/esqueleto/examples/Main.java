@@ -11,7 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Executors;
 
-/* Eli @ December 28, 2022 (creation) */
+/**
+ * @author Eli
+ * @since December 28, 2022 (creation)
+ */
 public final class Main
 {
     public static void main (String... args)

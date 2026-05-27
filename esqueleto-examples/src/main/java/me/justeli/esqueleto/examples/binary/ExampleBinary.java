@@ -12,7 +12,10 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.UncheckedIOException;
 
-/* Eli @ December 28, 2022 (creation) */
+/**
+ * @author Eli
+ * @since December 28, 2022 (creation)
+ */
 public final class ExampleBinary
     implements Binary<Example>
 {

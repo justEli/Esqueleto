@@ -1,18 +1,17 @@
 package me.justeli.esqueleto.driver;
 
-/* Eli @ January 02, 2023 (creation) */
-public final class H2Driver
-    implements SqlDriver
-{
+/**
+ * @author Eli
+ * @since January 02, 2023 (creation)
+ */
+public final class H2Driver implements SqlDriver {
     @Override
-    public String className ()
-    {
+    public String getClassName() {
         return "org.h2.jdbcx.JdbcDataSource";
     }
 
     @Override
-    public String dependency ()
-    {
+    public String getDependency() {
         return """
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -20,8 +19,7 @@ public final class H2Driver
     }
 
     @Override
-    public boolean supportsProperties ()
-    {
+    public boolean hasPropertiesSupport() {
         return false;
     }
 }

@@ -1,37 +1,33 @@
 package me.justeli.esqueleto;
 
-import me.justeli.esqueleto.annotation.CheckReturnValue;
+import org.jetbrains.annotations.CheckReturnValue;
 
-/* Eli @ April 13, 2021 (creation) */
-public final class UnparsedStatement
-{
-    private final Esqueleto esqueleto;
+/**
+ * @author Eli
+ * @since April 13, 2021 (creation)
+ */
+public final class UnparsedStatement {
+    private final Esqueleto sql;
     private final String statement;
 
-    UnparsedStatement (Esqueleto esqueleto, String statement)
-    {
-        this.esqueleto = esqueleto;
+    UnparsedStatement(Esqueleto sql, String statement) {
+        this.sql = sql;
         this.statement = statement;
     }
 
     @CheckReturnValue
-    public ExecuteUpdate update ()
-    {
-        return new ExecuteUpdate(this.esqueleto, this.statement);
+    public ExecuteUpdate update() {
+        return new ExecuteUpdate(sql, statement);
     }
 
     @CheckReturnValue
-    public ExecuteQuery query ()
-    {
-        return new ExecuteQuery(this.esqueleto, this.statement);
+    public ExecuteQuery query() {
+        return new ExecuteQuery(sql, statement);
     }
 
-    /**
-     * @param replacements The replacements that will replace the question marks in the query.
-     */
+    /// @param replacements The replacements that will replace the question marks in the query.
     @CheckReturnValue
-    public StatementBind bind (Object... replacements)
-    {
-        return new StatementBind(this.esqueleto, this.statement, replacements);
+    public StatementBind bind(Object... replacements) {
+        return new StatementBind(sql, statement, replacements);
     }
 }

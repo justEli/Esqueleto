@@ -1,7 +1,5 @@
 package me.justeli.esqueleto.driver;
 
-/* Eli @ January 02, 2023 (creation) */
-
 /**
  * <pre>
  * CREATE DATABASE esqueleto_test;
@@ -10,19 +8,18 @@ package me.justeli.esqueleto.driver;
  * CREATE USER esqueleto FOR LOGIN esqueleto;
  * EXEC sp_addrolemember 'db_owner', 'esqueleto';
  * </pre>
+ *
+ * @author Eli
+ * @since January 02, 2023 (creation)
  */
-public final class MSSQLDriver
-    implements SqlDriver
-{
+public final class MSSQLDriver implements SqlDriver {
     @Override
-    public String className ()
-    {
+    public String getClassName() {
         return "com.microsoft.sqlserver.jdbc.SQLServerDataSource";
     }
 
     @Override
-    public String dependency ()
-    {
+    public String getDependency() {
         return """
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
@@ -30,14 +27,12 @@ public final class MSSQLDriver
     }
 
     @Override
-    public boolean supportsProperties ()
-    {
+    public boolean hasPropertiesSupport() {
         return false;
     }
 
     @Override
-    public String portKey ()
-    {
+    public String getPortKey() {
         return "portNumber";
     }
 }

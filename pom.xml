@@ -6,19 +6,26 @@
 
     <groupId>com.github.JustEli.Esqueleto</groupId>
     <artifactId>Esqueleto</artifactId>
-    <version>0.2.5</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
+
+    <name>Esqueleto</name>
+    <description>SQL util for Java using HikariCP, to make querying SQL in Java easier.</description>
+    <inceptionYear>2020</inceptionYear>
+    <url>https://github.com/JustEli/Esqueleto</url>
+
+    <properties>
+        <revision>0.2.6</revision>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <modules>
         <module>esqueleto-core</module>
         <module>esqueleto-examples</module>
         <module>esqueleto-testing</module>
     </modules>
-
-    <name>Esqueleto</name>
-    <description>SQL util for Java using HikariCP, to make querying SQL in Java easier.</description>
-    <inceptionYear>2020</inceptionYear>
-    <url>https://github.com/JustEli/Esqueleto</url>
 
     <developers>
         <developer>
@@ -38,13 +45,6 @@
         <system>GitHub Issues</system>
         <url>https://github.com/JustEli/Esqueleto/issues</url>
     </issueManagement>
-
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>24.1.0</version>
+            <version>26.0.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

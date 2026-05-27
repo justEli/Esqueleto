@@ -6,7 +6,10 @@ import me.justeli.esqueleto.examples.data.Example;
 import java.util.SplittableRandom;
 import java.util.UUID;
 
-/* Eli @ December 28, 2022 (creation) */
+/**
+ * @author Eli
+ * @since December 28, 2022 (creation)
+ */
 public final class Insertions
 {
     private static final SplittableRandom RANDOM = new SplittableRandom();
