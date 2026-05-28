@@ -15,7 +15,7 @@ SQL util for Java using HikariCP, to make querying SQL in Java easier.
 
 <dependencies>
     <dependency>
-        <groupId>com.github.JustEli.Esqueleto</groupId>
+        <groupId>me.justeli.esqueleto</groupId>
         <artifactId>esqueleto-core</artifactId>
         <version>VERSION</version>
     </dependency>
