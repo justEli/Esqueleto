@@ -1,21 +1,23 @@
 package me.justeli.esqueleto;
 
+import java.util.OptionalLong;
+
 /**
  * @author Eli
  * @since May 28, 2026
  */
 public final class UpdateResult implements ResultType {
-    private final long insertedId;
+    private final Long insertedId;
     private final long rows;
 
-    public UpdateResult(long insertedId, long rows) {
+    public UpdateResult(Long insertedId, long rows) {
         this.insertedId = insertedId;
         this.rows = rows;
     }
 
     /// @return the id of the new row. in MariaDB and MySQL: only works for a PRIMARY KEY AUTO_INCREMENT column!
-    public long getInsertedId() {
-        return insertedId;
+    public OptionalLong getInsertedId() {
+        return insertedId == null? OptionalLong.empty() : OptionalLong.of(insertedId);
     }
 
     public long getRows() {

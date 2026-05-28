@@ -41,7 +41,7 @@ public final class ExecuteUpdate extends AbstractStatement<UpdateResult> {
 
     private UpdateResult getUpdateResult(@NotNull ResultSet resultSet, long totalRows) throws SQLException {
         // does resultSet.getLong(1) also work for other drivers than MariaDB?
-        long insertedId = resultSet.next()? resultSet.getLong(1) : 0L;
+        Long insertedId = resultSet.next()? resultSet.getLong(1) : null;
         return new UpdateResult(insertedId, totalRows);
     }
 
