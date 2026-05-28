@@ -1,5 +1,5 @@
 # Esqueleto
-![](https://img.shields.io/badge/Java-17-blue)
+![Java](https://img.shields.io/badge/Java-25-blue)
 
 ### Description
 SQL util for Java using HikariCP, to make querying SQL in Java easier.
@@ -15,7 +15,7 @@ SQL util for Java using HikariCP, to make querying SQL in Java easier.
 
 <dependencies>
     <dependency>
-        <groupId>me.justeli.esqueleto</groupId>
+        <groupId>com.github.JustEli.Esqueleto</groupId>
         <artifactId>esqueleto-core</artifactId>
         <version>VERSION</version>
     </dependency>
