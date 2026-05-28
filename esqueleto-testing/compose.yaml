@@ -1,31 +1,31 @@
-version: '3.8'
 services:
     mariadb:
-        container_name: esqueleto-mariadb
+        container_name: mariadb
         image: mariadb:latest
         environment:
             - MYSQL_ROOT_PASSWORD=F14WeaG1BLKAnvIT7
             - MYSQL_DATABASE=esqueleto
     mssql:
-        container_name: esqueleto-mssql
+        container_name: mssql
         image: mcr.microsoft.com/mssql/server:latest
         environment:
             - ACCEPT_EULA=Y
             - SA_PASSWORD=F14WeaG1BLKAnvIT7
+            - MSSQL_SA_PASSWORD=F14WeaG1BLKAnvIT7
     mysql:
-        container_name: esqueleto-mysql
+        container_name: mysql
         image: mysql:latest
         environment:
             - MYSQL_ROOT_PASSWORD=F14WeaG1BLKAnvIT7
             - MYSQL_DATABASE=esqueleto
     postgres:
-        container_name: esqueleto-postgres
+        container_name: postgres
         image: postgres:latest
         environment:
             - POSTGRES_PASSWORD=F14WeaG1BLKAnvIT7
             - POSTGRES_DB=esqueleto
     application:
-        container_name: esqueleto-application
+        container_name: application
         build: ./
         depends_on:
             - mariadb

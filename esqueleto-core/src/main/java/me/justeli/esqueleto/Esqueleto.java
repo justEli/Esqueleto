@@ -22,24 +22,22 @@ public final class Esqueleto {
 
     static final Logger LOGGER = LoggerFactory.getLogger(Esqueleto.class);
 
-    public static EsqueletoBuilder create(@NotNull Consumer<SqlConfig> consumer) {
+    public static Esqueleto start(@NotNull Consumer<SqlConfig> consumer) {
         var config = new SqlConfig();
         consumer.accept(config);
 
-        return new EsqueletoBuilder(config);
+        try {
+            return new Esqueleto(config);
+        }
+        catch (RuntimeException exception) {
+            Esqueleto.LOGGER.error("No dependency was detected for the SQL driver: {}", exception.getMessage());
+            return null;
+        }
     }
 
-    public static Esqueleto start(@NotNull String database, @NotNull String username, @NotNull String password) {
-        return new EsqueletoBuilder(new SqlConfig()).start(database, username, password);
-    }
-
-    public static Esqueleto start(@NotNull String database, @NotNull String username) {
-        return new EsqueletoBuilder(new SqlConfig()).start(database, username);
-    }
-
-    Esqueleto(SqlConfig config, HikariDataSource source) {
+    Esqueleto(SqlConfig config) {
         long startTime = System.nanoTime();
-        this.hikari = source;
+        this.hikari = new HikariDataSource(config);
         this.config = config;
 
         config.getQueueService().submit(() -> Thread.currentThread().setName("EsqueletoQueuedService"));

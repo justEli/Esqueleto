@@ -16,45 +16,33 @@ import java.io.UncheckedIOException;
  * @author Eli
  * @since December 28, 2022 (creation)
  */
-public final class ExampleBinary
-    implements Binary<Example>
-{
+public final class ExampleBinary implements Binary<Example> {
     @Override
-    public byte[] from (Example type)
-    {
-        try (ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-             ObjectOutput output = new ObjectOutputStream(bytes))
-        {
+    public byte[] from(Example type) {
+        try (ByteArrayOutputStream bytes = new ByteArrayOutputStream(); ObjectOutput output = new ObjectOutputStream(bytes)) {
             output.writeObject(type);
             return bytes.toByteArray();
         }
-        catch (IOException exception)
-        {
+        catch (IOException exception) {
             throw new UncheckedIOException(exception);
         }
     }
 
     @Override
-    public Example to (byte[] data)
-    {
-        try (ByteArrayInputStream bytes = new ByteArrayInputStream(data);
-             ObjectInput input = new ObjectInputStream(bytes))
-        {
+    public Example to(byte[] data) {
+        try (ByteArrayInputStream bytes = new ByteArrayInputStream(data); ObjectInput input = new ObjectInputStream(bytes)) {
             return (Example) input.readObject();
         }
-        catch (IOException exception)
-        {
+        catch (IOException exception) {
             throw new UncheckedIOException(exception);
         }
-        catch (ClassNotFoundException exception)
-        {
+        catch (ClassNotFoundException exception) {
             throw new RuntimeException(exception);
         }
     }
 
     @Override
-    public Class<Example> type ()
-    {
+    public Class<Example> type() {
         return Example.class;
     }
 }

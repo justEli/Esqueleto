@@ -5,6 +5,8 @@
 SQL util for Java using HikariCP, to make querying SQL in Java easier.
 
 ## Maven
+[![](https://jitpack.io/v/JustEli/Esqueleto.svg)](https://jitpack.io/#JustEli/Esqueleto)
+
 ```xml
 <repositories>
     <repository>
@@ -29,29 +31,32 @@ SQL util for Java using HikariCP, to make querying SQL in Java easier.
 
 ## Adapters
 
-| **Adapter** | **Works?** | **Esqueleto Version** | **Adapter Version** |
-|------------|------------|---------------------------|-------------------------|
-| MariaDB       | ✅ Fully    | latest (always tested) | [2.7.7 (Maven)](https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client/2.7.7) |
-| MySQL         | ❌ ResultSet closed     |                           |                         |
-| SQLite        | ❌ Can't select    |                           |                         |
-| PostgreSQL    | ❌ ResultSet closed    |                           |                         |
-| MS SQL Server | ❌ Untested    |                           |                         |
-| H2            | ❌ Untested    |                           |                         |
+| **Adapter**   | **Works?** | **Esqueleto Version**  | **Adapter Version**                                                                   |
+|---------------|------------|------------------------|---------------------------------------------------------------------------------------|
+| MariaDB       | ✅ Fully    | latest (always tested) | [3.5.8](https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client)      |
+| MySQL         | ✅ Fully    | 0.3.0                  | [9.7.0](https://mvnrepository.com/artifact/com.mysql/mysql-connector-j/9.7.0)         |
+| PostgreSQL    | ✅ Fully    | 0.3.0                  | [42.7.11](https://mvnrepository.com/artifact/org.postgresql/postgresql)               |
+| MS SQL Server | ✅ Fully    | 0.3.0                  | [13.4.0.jre11](https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc) |
+| H2            | ❌ Untested |                        |                                                                                       |
+| SQLite        | ❌ Untested |                        |                                                                                       |
 
 ## Examples
 
 ### Open connection
 ```java
-Esqueleto sql = Esqueleto.create(config -> {
-    config.setDriver(MariaDBDriver.class);
-    // CREATE DATABASE esqueleto_test;
-    config.setDatabase("esqueleto_test");
-    // CREATE USER 'esqueleto'@'localhost' IDENTIFIED BY 'dAQ5g61NT';
-    // GRANT ALL PRIVILEGES ON esqueleto_test.* TO 'esqueleto'@'localhost';
-    config.setUsername("esqueleto");
-    config.setPassword("dAQ5g61NT");
-}).start();
+Esqueleto sql = Esqueleto.start(config -> {
+    config.setJdbcUrl("jdbc:mariadb://mariadb:3306/esqueleto");
+    config.setUsername("root");
+    config.setPassword("F14WeaG1BLKAnvIT7");
+});
 ```
+Using the following database:
+```sql
+CREATE DATABASE esqueleto_test;
+CREATE USER 'esqueleto'@'localhost' IDENTIFIED BY 'F14WeaG1BLKAnvIT7';
+GRANT ALL PRIVILEGES ON esqueleto_test.* TO 'esqueleto'@'localhost';
+```
+
 ### Update
 Returns the inserted id of the signature
 ```java

@@ -1,6 +1,7 @@
 package me.justeli.esqueleto;
 
 import me.justeli.esqueleto.binary.Binary;
+import me.justeli.esqueleto.handler.SqlBiConsumer;
 import me.justeli.esqueleto.handler.SqlConsumer;
 import me.justeli.esqueleto.handler.SqlFunction;
 import org.jetbrains.annotations.CheckReturnValue;
@@ -14,6 +15,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Eli
@@ -31,33 +35,20 @@ public abstract class AbstractStatement {
     }
 
     @CheckReturnValue
-    abstract ExecutionData execute();
+    abstract void execute(SqlBiConsumer<ResultSet, Integer> result);
+
+    // todo passing the resultSet into new Results(..) may give issues with try-with-resources
 
     @CheckReturnValue
     @NotNull
     public <T> Optional<T> complete(@NotNull SqlFunction<Results, T> handler) {
-        ExecutionData data = execute();
-        try (ResultSet resultSet = data.resultSet()) {
-            if (resultSet == null) {
-                return Optional.empty();
-            }
-
-            return Optional.ofNullable(handler.apply(new Results(resultSet, sql)));
-        }
-        catch (SQLException exception) {
-            Esqueleto.printError(exception, statement);
-            return Optional.empty();
-        }
+        AtomicReference<T> result = new AtomicReference<>();
+        execute(((resultSet, _) -> result.set(handler.apply(new Results(resultSet, sql)))));
+        return Optional.ofNullable(result.get());
     }
 
     public void complete(@NotNull SqlConsumer<Results> handler) {
-        ExecutionData data = execute();
-        try (ResultSet resultSet = data.resultSet()) {
-            handler.accept(new Results(resultSet, sql));
-        }
-        catch (SQLException exception) {
-            Esqueleto.printError(exception, statement);
-        }
+        execute((resultSet, _) -> handler.accept(new Results(resultSet, sql)));
     }
 
     /// Queue onto a queued thread.
@@ -71,37 +62,47 @@ public abstract class AbstractStatement {
     }
 
     void parseReplacements(@NotNull PreparedStatement statement, Object... replacements) throws SQLException {
-        int i = 1;
+        AtomicInteger position = new AtomicInteger(1);
         for (Object replacement : replacements) {
-            if (replacement instanceof Optional<?> optional) {
-                replacement = optional.orElse(null);
-            }
+            setObject(statement, position, replacement);
+        }
+    }
 
-            if (replacement == null) {
-                statement.setNull(i++, Types.NULL);
-                continue;
-            }
+    private void setObject(@NotNull PreparedStatement statement, AtomicInteger position, Object value) throws SQLException {
+        if (value instanceof Optional<?> optional) {
+            value = optional.orElse(null);
+        }
 
-            Binary<?> binary = sql.getConfig().getBinaryTransformer(replacement.getClass());
-            if (binary != null) {
-                statement.setObject(i++, binary.from(cast(replacement, binary.type())));
+        if (value == null) {
+            statement.setNull(position.getAndIncrement(), Types.NULL);
+            return;
+        }
+
+        Binary<?> binary = sql.getConfig().getBinaryTransformer(value.getClass());
+        if (binary != null) {
+            statement.setObject(position.getAndIncrement(), binary.from(cast(value, binary.type())));
+            return;
+        }
+
+        if (value instanceof Collection<?> collection) {
+            for (Object object : collection) {
+                setObject(statement, position, object);
             }
-            else if (replacement instanceof Collection<?> collection) {
-                for (Object object : collection) {
-                    statement.setObject(i++, object);
-                }
-            }
-            else {
-                statement.setObject(i++, replacement);
-            }
+        }
+        else if (value instanceof UUID uuid) {
+            statement.setObject(position.getAndIncrement(), uuid.toString());
+        }
+        else {
+            statement.setObject(position.getAndIncrement(), value);
         }
     }
 
     static <T> T cast(Object replacement, Class<?> type) {
+        // noinspection unchecked
         return type.isInstance(replacement)? (T) type.cast(replacement) : null;
     }
 
-    static String checkForIterable(@NotNull String query, Object... replacements) {
+    static String parseIterable(@NotNull String query, Object... replacements) {
         int i = 0;
         for (Object replacement : replacements) {
             if (replacement instanceof Collection<?> collection) {

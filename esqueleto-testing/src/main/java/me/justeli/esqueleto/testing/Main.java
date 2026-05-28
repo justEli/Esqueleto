@@ -1,10 +1,6 @@
 package me.justeli.esqueleto.testing;
 
 import me.justeli.esqueleto.Esqueleto;
-import me.justeli.esqueleto.driver.MSSQLDriver;
-import me.justeli.esqueleto.driver.MariaDBDriver;
-import me.justeli.esqueleto.driver.MySQLDriver;
-import me.justeli.esqueleto.driver.PostgreSQLDriver;
 
 import java.util.Optional;
 import java.util.SplittableRandom;
@@ -13,41 +9,63 @@ import java.util.SplittableRandom;
  * @author Eli
  * @since October 10, 2023 (creation)
  */
-public class Main
-{
-    public static void main (String... args)
-    throws InterruptedException
-    {
-        System.out.println("Waiting 5 seconds..");
-        Thread.sleep(5000);
+public class Main {
+    static void main() throws InterruptedException {
+        System.out.println("Waiting 2 seconds..");
+        Thread.sleep(2000);
+
+        performTests();
+    }
+
+    private static void performTests() {
+        // using docker containers for address, hence no localhost
+
+        // MSSQL:
+        // * CREATE DATABASE esqueleto_test;
+        // * USE esqueleto_test;
+        // * CREATE LOGIN esqueleto WITH PASSWORD = 'dAQ5g61NT';
+        // * CREATE USER esqueleto FOR LOGIN esqueleto;
+        // * EXEC sp_addrolemember 'db_owner', 'esqueleto';
 
         System.out.println("\nOpening MS SQL..");
-        Esqueleto mssql = Esqueleto.create(config -> {
-            config.setDriver(MSSQLDriver.class);
+        Esqueleto mssql = Esqueleto.start(config -> {
             config.setDebug(true);
-            config.setHost("mssql");
-        }).start("esqueleto", "root", "F14WeaG1BLKAnvIT7");
+            config.setDriverClassName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            config.setJdbcUrl("jdbc:sqlserver://mssql:1433;databaseName=master;encrypt=true;trustServerCertificate=true");
+            config.setUsername("sa");
+            config.setPassword("F14WeaG1BLKAnvIT7");
+        });
+
+        // MariaDB:
+        // * CREATE DATABASE esqueleto_test;
+        // * CREATE USER 'esqueleto'@'localhost' IDENTIFIED BY 'dAQ5g61NT';
+        // * GRANT ALL PRIVILEGES ON esqueleto_test.* TO 'esqueleto'@'localhost';
 
         System.out.println("\nOpening MariaDB..");
-        Esqueleto mariadb = Esqueleto.create(config -> {
-            config.setDriver(MariaDBDriver.class);
-            config.setDebug(true);
-            config.setHost("mariadb");
-        }).start("esqueleto", "root", "F14WeaG1BLKAnvIT7");
+Esqueleto mariadb = Esqueleto.start(config -> {
+    config.setDebug(true);
+    config.setJdbcUrl("jdbc:mariadb://mariadb:3306/esqueleto");
+    config.setUsername("root");
+    config.setPassword("F14WeaG1BLKAnvIT7");
+});
 
         System.out.println("\nOpening MySQL..");
-        Esqueleto mysql = Esqueleto.create(config -> {
-            config.setDriver(MySQLDriver.class);
+        Esqueleto mysql = Esqueleto.start(config -> {
             config.setDebug(true);
-            config.setHost("mysql");
-        }).start("esqueleto", "root", "F14WeaG1BLKAnvIT7");
+            config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+            config.setJdbcUrl("jdbc:mysql://mysql:3306/esqueleto?allowPublicKeyRetrieval=true&useSSL=false");
+            config.setUsername("root");
+            config.setPassword("F14WeaG1BLKAnvIT7");
+        });
 
         System.out.println("\nOpening PostgreSQL..");
-        Esqueleto postgres = Esqueleto.create(config -> {
-            config.setDriver(PostgreSQLDriver.class);
+        Esqueleto postgres = Esqueleto.start(config -> {
             config.setDebug(true);
-            config.setHost("postgres");
-        }).start("esqueleto", "root", "F14WeaG1BLKAnvIT7");
+            config.setDriverClassName("org.postgresql.Driver");
+            config.setJdbcUrl("jdbc:postgresql://postgres:5432/esqueleto");
+            config.setUsername("postgres");
+            config.setPassword("F14WeaG1BLKAnvIT7");
+        });
 
         System.out.println("\n\n\n");
         executeTest("MS SQL", mssql);
@@ -63,30 +81,34 @@ public class Main
 
     private static final SplittableRandom RANDOM = new SplittableRandom();
 
-    private static void executeTest (String type, Esqueleto sql)
-    {
-        if (sql == null)
-        {
+    private static void executeTest(String type, Esqueleto sql) {
+        if (sql == null) {
             fail(type, "connection was not opened successfully");
             return;
         }
 
-        var random = RANDOM.nextLong();
+        long random = RANDOM.nextLong();
+        String name = "abcdef";
+
+        System.out.println("     Random value to insert for " + type + ": " + random);
+
         sql.statement("DROP TABLE IF EXISTS test_table").update().complete();
-        sql.statement("CREATE TABLE IF NOT EXISTS test_table ( id BIGINT )").update().complete();
-        sql.statement("INSERT INTO test_table (id) VALUE (?)").bind(random).update().complete();
-        Optional<Long> id = sql.statement("SELECT id FROM test_table LIMIT 1").query()
-            .complete(data -> data.next()? data.getNullableLong("id") : null);
+        sql.statement("CREATE TABLE test_table ( id BIGINT, name CHAR(6) )").update().complete();
+        sql.statement("INSERT INTO test_table (id, name) VALUES (?, ?)").bind(random, name).update().complete();
+
+        Optional<Long> id = sql.statement(
+            "SELECT id, name FROM test_table"
+        ).query().complete(data -> data.next() && name.equals(data.getString("name"))? data.getNullableLong("id") : null);
 
         if (id.isPresent() && id.get() == random) {
-            System.out.println("✅   Test successful for " + type + ": selected inserted " + random + ".");
-        } else {
+            System.out.println("✅   Test successful for " + type + ": selected inserted " + random + ".\n\n");
+        }
+        else {
             fail(type, "querying was not successful");
         }
     }
 
-    private static void fail (String type, String reason)
-    {
-        System.out.println("❌   Test failed for " + type + ": " + reason + ".");
+    private static void fail(String type, String reason) {
+        System.out.println("❌   Test failed for " + type + ": " + reason + ".\n\n");
     }
 }

@@ -1,5 +1,8 @@
 package me.justeli.esqueleto;
 
+import me.justeli.esqueleto.handler.SqlBiConsumer;
+
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -11,21 +14,20 @@ public final class ExecuteQuery extends AbstractStatement {
         super(sql, statement, replacements);
     }
 
-    /**
-     * @return The row(s) requested in the query.
-     */
+    /// @param result The row(s) requested in the query.
     @Override
-    ExecutionData execute() {
-        try (
-            var connection = sql.getConnection();
-            var prepared = connection.prepareStatement(checkForIterable(statement, replacements))
-        ) {
-            parseReplacements(prepared, replacements);
-            return new ExecutionData(prepared.executeQuery(), 0);
+    void execute(SqlBiConsumer<ResultSet, Integer> result) {
+        try (var connection = sql.getConnection()) {
+            String replaced = parseIterable(statement, replacements);
+            try (var prepared = connection.prepareStatement(replaced)) {
+                parseReplacements(prepared, replacements);
+                try (var data = prepared.executeQuery()) {
+                    result.accept(data, 0);
+                }
+            }
         }
         catch (SQLException exception) {
             Esqueleto.printError(exception, statement);
-            return new ExecutionData(null, 0);
         }
     }
 }

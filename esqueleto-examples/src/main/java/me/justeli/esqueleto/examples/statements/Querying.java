@@ -10,17 +10,12 @@ import java.util.UUID;
  * @author Eli
  * @since December 28, 2022 (creation)
  */
-public final class Querying
-{
-    public record QueryUuidData (UUID data, String message)
-    {}
+public final class Querying {
+    public record QueryUuidData(UUID data, String message) {}
 
-    public Querying (Main main)
-    {
-        main.sql().statement("SELECT id, data FROM TestTable").query().queue(data ->
-        {
-            while (data.next())
-            {
+    public Querying(Main main) {
+        main.sql().statement("SELECT id, data FROM TestTable").query().queue(data -> {
+            while (data.next()) {
                 Main.LOGGER.info(
                     "{}: {}",
                     data.get("id"),
@@ -31,8 +26,7 @@ public final class Querying
 
         Optional<QueryUuidData> uuid = main.sql().statement(
             "SELECT uuid, message FROM UuidTable ORDER BY added_at DESC LIMIT 1"
-        ).query().complete(data ->
-        {
+        ).query().complete(data -> {
             return new QueryUuidData(
                 data.get("uuid", UUID.class),
                 data.get("message")

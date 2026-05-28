@@ -10,14 +10,11 @@ import java.util.UUID;
  * @author Eli
  * @since December 28, 2022 (creation)
  */
-public final class Insertions
-{
+public final class Insertions {
     private static final SplittableRandom RANDOM = new SplittableRandom();
 
-    public Insertions (Main main)
-    {
-        for (int i = 0; i < 3; i++)
-        {
+    public Insertions(Main main) {
+        for (int i = 0; i < 3; i++) {
             var data = new Example(
                 RANDOM.nextInt(),
                 Integer.toHexString(RANDOM.nextInt())
@@ -33,6 +30,6 @@ public final class Insertions
             Integer.toHexString(RANDOM.nextInt())
         ).update().complete();
 
-        Main.LOGGER.info("Inserted rows: " + inserted);
+        Main.LOGGER.info("Inserted rows: {}", inserted);
     }
 }
