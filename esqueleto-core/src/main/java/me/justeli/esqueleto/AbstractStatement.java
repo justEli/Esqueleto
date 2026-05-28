@@ -17,13 +17,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @author Eli
  * @since December 2, 2022 (creation)
  */
-public abstract class AbstractStatement {
+public abstract class AbstractStatement<R extends ResultType> {
     final Esqueleto sql;
     final String statement;
     final Object[] replacements;
@@ -34,30 +33,20 @@ public abstract class AbstractStatement {
         this.replacements = replacements;
     }
 
-    @CheckReturnValue
     abstract void execute(SqlBiConsumer<ResultSet, Integer> result);
 
-    // todo passing the resultSet into new Results(..) may give issues with try-with-resources
-
     @CheckReturnValue
-    @NotNull
-    public <T> Optional<T> complete(@NotNull SqlFunction<Results, T> handler) {
-        AtomicReference<T> result = new AtomicReference<>();
-        execute(((resultSet, _) -> result.set(handler.apply(new Results(resultSet, sql)))));
-        return Optional.ofNullable(result.get());
-    }
+    public abstract <T> @NotNull Optional<T> complete(@NotNull SqlFunction<R, T> handler);
 
-    public void complete(@NotNull SqlConsumer<Results> handler) {
-        execute((resultSet, _) -> handler.accept(new Results(resultSet, sql)));
-    }
+    public abstract void complete(@NotNull SqlConsumer<R> handler);
 
     /// Queue onto a queued thread.
-    public void queue(@NotNull SqlConsumer<Results> handler) {
+    public void queue(@NotNull SqlConsumer<R> handler) {
         sql.getConfig().getQueueService().submit(() -> complete(handler));
     }
 
     /// Push onto an async thread.
-    public void push(@NotNull SqlConsumer<Results> handler) {
+    public void push(@NotNull SqlConsumer<R> handler) {
         sql.getConfig().getAsyncService().submit(() -> complete(handler));
     }
 

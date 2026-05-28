@@ -1,6 +1,7 @@
 package me.justeli.esqueleto.testing;
 
 import me.justeli.esqueleto.Esqueleto;
+import me.justeli.esqueleto.UpdateResult;
 
 import java.util.Optional;
 import java.util.SplittableRandom;
@@ -42,12 +43,12 @@ public class Main {
         // * GRANT ALL PRIVILEGES ON esqueleto_test.* TO 'esqueleto'@'localhost';
 
         System.out.println("\nOpening MariaDB..");
-Esqueleto mariadb = Esqueleto.start(config -> {
-    config.setDebug(true);
-    config.setJdbcUrl("jdbc:mariadb://mariadb:3306/esqueleto");
-    config.setUsername("root");
-    config.setPassword("F14WeaG1BLKAnvIT7");
-});
+        Esqueleto mariadb = Esqueleto.start(config -> {
+            config.setDebug(true);
+            config.setJdbcUrl("jdbc:mariadb://mariadb:3306/esqueleto");
+            config.setUsername("root");
+            config.setPassword("F14WeaG1BLKAnvIT7");
+        });
 
         System.out.println("\nOpening MySQL..");
         Esqueleto mysql = Esqueleto.start(config -> {
@@ -90,7 +91,7 @@ Esqueleto mariadb = Esqueleto.start(config -> {
         long random = RANDOM.nextLong();
         String name = "abcdef";
 
-        System.out.println("     Random value to insert for " + type + ": " + random);
+        System.out.println("    Random value to insert for " + type + ": " + random);
 
         sql.statement("DROP TABLE IF EXISTS test_table").update().complete();
         sql.statement("CREATE TABLE test_table ( id BIGINT, name CHAR(6) )").update().complete();
@@ -101,7 +102,7 @@ Esqueleto mariadb = Esqueleto.start(config -> {
         ).query().complete(data -> data.next() && name.equals(data.getString("name"))? data.getNullableLong("id") : null);
 
         if (id.isPresent() && id.get() == random) {
-            System.out.println("✅   Test successful for " + type + ": selected inserted " + random + ".\n\n");
+            System.out.println("✅  Test successful for " + type + ": selected inserted " + random + ".\n\n");
         }
         else {
             fail(type, "querying was not successful");
@@ -109,6 +110,6 @@ Esqueleto mariadb = Esqueleto.start(config -> {
     }
 
     private static void fail(String type, String reason) {
-        System.out.println("❌   Test failed for " + type + ": " + reason + ".\n\n");
+        System.out.println("❌  Test failed for " + type + ": " + reason + ".\n\n");
     }
 }

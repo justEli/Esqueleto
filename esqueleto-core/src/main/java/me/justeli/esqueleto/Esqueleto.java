@@ -56,18 +56,13 @@ public final class Esqueleto {
         }
     }
 
-    /**
-     * @param statement SQL statement that contains question marks (?) as variables.
-     */
+    /// @param statement SQL statement that contains question marks (?) as variables.
     @CheckReturnValue
-    @NotNull
-    public UnparsedStatement statement(@Language("SQL") @NotNull String statement) {
+    public @NotNull UnparsedStatement statement(@Language("SQL") @NotNull String statement) {
         return new UnparsedStatement(this, statement);
     }
 
-    /**
-     * Close the SQL connection of the database.
-     */
+    /// Close the SQL connection of the database.
     public void close() {
         if (hikari == null) {
             return;

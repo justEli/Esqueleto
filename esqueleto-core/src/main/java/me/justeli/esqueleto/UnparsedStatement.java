@@ -15,11 +15,13 @@ public final class UnparsedStatement {
         this.statement = statement;
     }
 
+    /// mostly UPDATE, INSERT, DELETE
     @CheckReturnValue
     public ExecuteUpdate update() {
         return new ExecuteUpdate(sql, statement);
     }
 
+    /// mostly SELECT
     @CheckReturnValue
     public ExecuteQuery query() {
         return new ExecuteQuery(sql, statement);

@@ -56,6 +56,7 @@ public final class SqlConfig extends HikariConfig {
     }
 
     public <T> Binary<T> getBinaryTransformer(Class<T> type) {
+        // noinspection unchecked
         return (Binary<T>) transformers.get(type);
     }
 

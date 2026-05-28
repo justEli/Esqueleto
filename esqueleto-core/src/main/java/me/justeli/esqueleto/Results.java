@@ -18,7 +18,7 @@ import java.util.UUID;
  * @author Eli
  * @since December 28, 2022 (creation)
  */
-public final class Results {
+public final class Results implements ResultType {
     private final @NotNull ResultSet resultSet;
     private final Esqueleto sql;
 

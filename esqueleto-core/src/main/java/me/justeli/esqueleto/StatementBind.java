@@ -17,11 +17,13 @@ public final class StatementBind {
         this.replacements = replacements;
     }
 
+    /// mostly UPDATE, INSERT, DELETE
     @CheckReturnValue
     public ExecuteUpdate update() {
         return new ExecuteUpdate(sql, statement, replacements);
     }
 
+    /// mostly SELECT
     @CheckReturnValue
     public ExecuteQuery query() {
         return new ExecuteQuery(sql, statement, replacements);

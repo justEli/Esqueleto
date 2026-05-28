@@ -1,5 +1,6 @@
 package me.justeli.esqueleto.examples.statements;
 
+import me.justeli.esqueleto.UpdateResult;
 import me.justeli.esqueleto.examples.Main;
 import me.justeli.esqueleto.examples.data.Example;
 
@@ -23,7 +24,7 @@ public final class Insertions {
             main.sql().statement("INSERT INTO TestTable (data) VALUES (?)").bind(data).update().queue();
         }
 
-        int inserted = main.sql().statement(
+        UpdateResult inserted = main.sql().statement(
             "INSERT INTO UuidTable (uuid, message) VALUES (?, ?)"
         ).bind(
             UUID.randomUUID(),
